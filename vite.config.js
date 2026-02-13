@@ -9,9 +9,4 @@ export default defineConfig({
     outDir: "../dist",
     emptyOutDir: true,
   },
-  plugins: [
-    handlebars({
-      partialDirectory: resolve(__dirname, "src/html"),
-    }),
-  ],
 });
