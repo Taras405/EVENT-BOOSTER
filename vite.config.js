@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import handlebars from "vite-plugin-handlebars";
-import { resolve } from "path";
+import path from "path";
 
 export default defineConfig({
   root: "src",
@@ -9,4 +9,9 @@ export default defineConfig({
     outDir: "../dist",
     emptyOutDir: true,
   },
+  plugins: [
+    handlebars({
+      partialDirectory: path.resolve(__dirname, "src/partials")
+    })
+  ],
 });
