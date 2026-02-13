@@ -1,7 +1,17 @@
 import { defineConfig } from "vite";
 import handlebars from "vite-plugin-handlebars";
+import { resolve } from "path";
 
 export default defineConfig({
-  base: "/event-booster/",
-  plugins: [handlebars()],
+  root: "src",
+  base: "/EVENT-BOOSTER/",
+  build: {
+    outDir: "../dist",
+    emptyOutDir: true,
+  },
+  plugins: [
+    handlebars({
+      partialDirectory: resolve(__dirname, "src/html"),
+    }),
+  ],
 });
