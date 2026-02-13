@@ -1,1 +1,1 @@
-import "../api/getEvent.js"
+import "../api/getEvents.js"
