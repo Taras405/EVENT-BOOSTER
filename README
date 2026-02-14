@@ -1,2 +1,38 @@
-СТАРТ ПРОЖЄКТ - npm start
-білд - npm run build
+﻿## Налаштування
+
+1. Встановити залежності:
+   `npm i`
+2. Запустити dev-сервер:
+   `npm run dev`
+3. Зібрати проєкт:
+   `npm run build`
+4. Переглянути production-збірку локально:
+   `npm run preview`
+5. Задеплоїти на GitHub Pages:
+   `npm run deploy`
+
+- Брейкпоінти:
+  - mobile: `320px+`
+  - tablet: `768px+`
+  - desktop: `1200px+`
+
+- Використовуйте контейнер у розмітці:
+
+```html
+<section class="section-name">
+  <div class="container section-name__container">
+    ...
+  </div>
+</section>
+```
+
+- Базові ширини контейнера у `src/style/base.css`.
+- Базовий шрифт `Montserrat` в base.css ; задавайте розміри тексту.
+
+## гілки
+
+1. Створюйте нові гілки від `main`.
+2. Робіть культурні коміти.
+3. Перед пушем завжди запускайте: !!!!!
+   `npm run build` 
+4. Відкривайте PR і виберіть Taras405 як review.

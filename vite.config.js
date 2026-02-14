@@ -4,6 +4,7 @@ import path from "path";
 
 export default defineConfig({
   root: "src",
+  publicDir: "../public",
   base: "/EVENT-BOOSTER/",
   build: {
     outDir: "../dist",
@@ -11,7 +12,7 @@ export default defineConfig({
   },
   plugins: [
     handlebars({
-      partialDirectory: path.resolve(__dirname, "src/partials")
-    })
+      partialDirectory: path.resolve(__dirname, "src/partials"),
+    }),
   ],
 });
