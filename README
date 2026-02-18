@@ -3,7 +3,7 @@
 1. Встановити залежності:
    `npm i`
 2. Запустити dev-сервер:
-   `npm run dev`
+   `npm run dev` або `npm start`
 3. Зібрати проєкт:
    `npm run build`
 4. Переглянути production-збірку локально:
@@ -36,3 +36,7 @@
 3. Перед пушем завжди запускайте: !!!!!
    `npm run build` 
 4. Відкривайте PR і виберіть Taras405 як review.
+5. Перед пулл реквестом переходити на гілку main і стягувати останні зміни щоб було менше конфліктів
+
+## посилання на макет
+https://www.figma.com/design/lA5E5K9EVprKB0vHtFiThy/EVENT-BOOSTER?node-id=1-2&t=tfK79A72RYLa0n45-0

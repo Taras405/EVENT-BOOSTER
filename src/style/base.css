@@ -20,17 +20,13 @@ body {
     top center;
   background-repeat: no-repeat, repeat-y;
   background-size: auto, cover;
-}
 
-@media (min-width: 768px) {
-  body {
+  @media (min-width: 768px) {
     background-image:
       url("/background-header.png"), url("/background-table.png");
   }
-}
 
-@media (min-width: 1200px) {
-  body {
+  @media (min-width: 1200px) {
     background-image:
       url("/background-header.png"), url("/background-desktop.png");
     background-size: contain, cover;
@@ -41,10 +37,8 @@ body {
   width: min(100% - 40px, 704px);
   margin-inline: auto;
   /* outline: 1px solid red; */
-}
 
-@media (min-width: 768px) {
-  .container {
+  @media (min-width: 768px) {
     width: min(100% - 64px, 946px);
   }
 }

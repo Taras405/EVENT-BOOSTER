@@ -12,9 +12,61 @@ const API_KEY = "BIqpeJSCCVibv6jIhfaVoFVpuL0cSADG";
 // /suggest – автопідказки для пошуку
 // /classifications – жанри, сегменти, типи
 
-const getEvents = async () => {
-  const res = await fetch(`${BASE_URL}/events?apikey=${API_KEY}`);
-  return res.json();
+
+const buildQuery = params => {
+  const query = new URLSearchParams({ apikey: API_KEY });
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === "") {
+      return;
+    }
+
+    query.set(key, String(value));
+  });
+
+  return query.toString();
 };
 
-export { getEvents };
+const request = async (path, params = {}) => {
+  const response = await fetch(`${BASE_URL}${path}?${buildQuery(params)}`);
+
+  if (!response.ok) {
+    throw new Error(`Ticketmaster API error: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+const getEvents = async ({ page = 1, size = 20, keyword = "", countryCode = "", city = "" } = {}) => {
+  const payload = await request("/events", {
+    page: Math.max(0, Number(page) - 1),
+    size,
+    keyword,
+    countryCode,
+    city,
+    sort: "date,asc",
+  });
+
+  const events = payload?._embedded?.events ?? [];
+  const pageInfo = payload?.page ?? {};
+
+  return {
+    events,
+    pagination: {
+      currentPage: (pageInfo.number ?? 0) + 1,
+      totalPages: pageInfo.totalPages ?? 1,
+      totalElements: pageInfo.totalElements ?? events.length,
+      size: pageInfo.size ?? size,
+    },
+  };
+};
+
+const getEventById = id => {
+  if (!id) {
+    throw new Error("Event id is required");
+  }
+
+  return request(`/events/${id}`);
+};
+
+export { getEvents, getEventById };
