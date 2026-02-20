@@ -1,0 +1,16 @@
+<ul class="gallery-list">
+  {{#each this}}
+    <li class="gallery-item">
+      <div class="image-wrapper">
+        <img src="{{imageUrl}}" alt="artist photo" width="180" height="227" />
+      </div>
+
+      <p class="artist-name"><i>{{artistName}}</i></p>
+      <p class="artist-date">{{artistDate}}</p>
+      <p class="artist-place">
+        <img class="location-icon" src="{{locationIcon}}" alt="location icon" width="16" height="16" />
+        {{artistPlace}}
+      </p>
+    </li>
+  {{/each}}
+</ul>
