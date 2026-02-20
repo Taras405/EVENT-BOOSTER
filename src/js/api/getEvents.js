@@ -31,7 +31,7 @@ const request = async (path, params = {}) => {
   const response = await fetch(`${BASE_URL}${path}?${buildQuery(params)}`);
 
   if (!response.ok) {
-    throw new Error(`Ticketmaster API error: ${response.status}`);
+    throw new Error(`Error: ${response.status}`);
   }
 
   return response.json();
