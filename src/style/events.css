@@ -1,0 +1,72 @@
+.gallery-container {
+  margin: 0;
+  padding: 40px;
+  font-family: "Inter", Arial, sans-serif;
+  background: radial-gradient(
+    circle at top,
+    #141420 0%,
+    #0b0b12 60%,
+    #07070d 100%
+  );
+  color: #ffffff;
+}
+
+.gallery-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 40px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.gallery-item {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 22px;
+  padding: 18px;
+  backdrop-filter: blur(10px);
+  transition: all 0.35s ease;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.image-wrapper {
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+  transition: transform 0.4s ease;
+}
+
+.artist-name {
+  font-weight: 600;
+  font-size: 18px;
+  margin: 16px 0 6px;
+  color: #ff2bd6;
+  text-shadow: 0 0 12px rgba(255, 0, 200, 0.4);
+}
+
+.artist-date {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 6px;
+}
+
+.artist-place {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.location-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0.7;
+}
