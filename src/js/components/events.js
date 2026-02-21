@@ -1,95 +1,154 @@
-import createEventsMarkup from "../../template/events.hbs?raw";
-import { getEvents } from "../api/getEvents.js";
+import Handlebars from "handlebars";
+import eventsTemplateSource from "../../template/events.hbs?raw";
+import { getEventsForCards } from "../api/getEvents.js";
 
-const LOCATION_ICON_PATH = "/images/location.svg";
+const createEventsMarkup = Handlebars.compile(eventsTemplateSource);
 
 const refs = {
-  container: document.querySelector(".gallery-container"),
+  container:
+    document.querySelector(".gallery-list") ||
+    document.querySelector(".gallery-container"),
+  paginationContainer: document.querySelector(".pagination") || null,
 };
 
-const formatDate = value => {
-  if (!value) {
-    return "Date unavailable";
-  }
+let currentPage = 1;
+let totalPages = 1;
+let currentParams = { keyword: "", countryCode: "US" };
 
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return new Intl.DateTimeFormat("uk-UA", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(date);
-};
-
-const getLargestImage = images => {
-  if (!Array.isArray(images) || images.length === 0) {
-    return "";
-  }
-
-  const sorted = [...images].sort((a, b) => {
-    const aSize = (a.width || 0) * (a.height || 0);
-    const bSize = (b.width || 0) * (b.height || 0);
-    return bSize - aSize;
-  });
-
-  return sorted[0] && sorted[0].url ? sorted[0].url : "";
-};
-
-const getVenueText = event => {
-  if (!event || !event._embedded || !Array.isArray(event._embedded.venues)) {
-    return "";
-  }
-
-  const venue = event._embedded.venues[0];
-  const city = venue && venue.city ? venue.city.name : "";
-  const country = venue && venue.country ? venue.country.name : "";
-
-  return [city, country].filter(Boolean).join(", ");
-};
-
-const mapEventsForTemplate = events => {
-  return events.map(event => {
-    return {
-      imageUrl: getLargestImage(event.images),
-      artistName: event.name || "Untitled event",
-      artistDate: formatDate(event.dates && event.dates.start ? event.dates.start.dateTime || event.dates.start.localDate : ""),
-      artistPlace: getVenueText(event),
-      locationIcon: LOCATION_ICON_PATH,
-    };
-  });
-};
-
-const renderEvents = events => {
+const renderCards = (cards) => {
   if (!refs.container) {
+    console.error("Gallery container not found");
     return;
   }
 
-  if (!events || events.length === 0) {
-    refs.container.innerHTML = "<p>No events found.</p>";
+  if (!cards || cards.length === 0) {
+    refs.container.innerHTML = "<p class='no-events'>No events found.</p>";
     return;
   }
-
-  refs.container.innerHTML = createEventsMarkup(mapEventsForTemplate(events));
-};
-
-const initEvents = async () => {
-  if (!refs.container) {
-    return;
-  }
-
-  refs.container.innerHTML = "<p>Loading events...</p>";
 
   try {
-    const events = await getEvents({ page: 1, size: 20 });
-    renderEvents(events);
+    refs.container.innerHTML = createEventsMarkup(cards);
   } catch (error) {
-    refs.container.innerHTML = `<p>${error.message}</p>`;
+    console.error("Error rendering template:", error);
+    refs.container.innerHTML = `<p class='error'>Error rendering events</p>`;
   }
 };
 
-initEvents();
+const renderPagination = () => {
+  if (!refs.paginationContainer || totalPages <= 1) {
+    return;
+  }
 
-export { mapEventsForTemplate };
+  const maxPagesToShow = 5;
+  const startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+  const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+  let html = "";
+
+
+  if (currentPage > 1) {
+    html += `<button class="pagination-btn" data-page="${currentPage - 1}">← Попередня</button>`;
+  }
+
+
+  if (startPage > 1) {
+    html += `<button class="pagination-btn" data-page="1">1</button>`;
+    if (startPage > 2) {
+      html += `<span class="pagination-dots">...</span>`;
+    }
+  }
+
+
+  for (let i = startPage; i <= endPage; i++) {
+    html += `
+      <button 
+        class="pagination-btn ${i === currentPage ? "active" : ""}" 
+        data-page="${i}"
+      >
+        ${i}
+      </button>
+    `;
+  }
+
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      html += `<span class="pagination-dots">...</span>`;
+    }
+    html += `<button class="pagination-btn" data-page="${totalPages}">${totalPages}</button>`;
+  }
+
+
+  if (currentPage < totalPages) {
+    html += `<button class="pagination-btn" data-page="${currentPage + 1}">Наступна →</button>`;
+  }
+
+  refs.paginationContainer.innerHTML = html;
+  attachPaginationListeners();
+};
+
+const attachPaginationListeners = () => {
+  const buttons = refs.paginationContainer?.querySelectorAll(".pagination-btn");
+
+  if (!buttons) return;
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const page = parseInt(e.target.dataset.page);
+      if (page && page !== currentPage) {
+        currentPage = page;
+        loadEvents(currentParams);
+      }
+    });
+  });
+};
+
+const loadEvents = async (params = {}) => {
+  if (!refs.container) {
+    console.error("Gallery container not found");
+    return;
+  }
+
+  refs.container.innerHTML = "<p class='loading'>Завантаження подій...</p>";
+
+  try {
+    currentParams = { ...currentParams, ...params };
+
+    const result = await getEventsForCards({
+      page: currentPage,
+      size: 20,
+      ...currentParams,
+    });
+
+    const { cards, totalPages: newTotalPages } = result;
+    totalPages = newTotalPages;
+
+    renderCards(cards);
+
+    if (!refs.paginationContainer) {
+      const paginationDiv = document.createElement("div");
+      paginationDiv.className = "pagination";
+      refs.container.parentNode.appendChild(paginationDiv);
+      refs.paginationContainer = paginationDiv;
+    }
+
+    renderPagination();
+  } catch (error) {
+    console.error("Error loading events:", error);
+    refs.container.innerHTML = `<p class='error'>Помилка: ${error.message}</p>`;
+  }
+};
+
+const loadEventsByCountry = (countryCode) => {
+  currentPage = 1;
+  loadEvents({ countryCode });
+};
+
+const loadEventsByKeyword = (keyword) => {
+  currentPage = 1;
+  loadEvents({ keyword });
+};
+
+loadEvents();
+
+export { loadEvents, loadEventsByCountry, loadEventsByKeyword };
