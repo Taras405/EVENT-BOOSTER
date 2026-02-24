@@ -1,0 +1,25 @@
+<!-- 
+  Назва:           {{name}}
+  
+  ЗОБРАЖЕННЯ:      {{images.[0].url}}
+  
+  ДАТА/ЧАС:
+    - dateTime:    {{dates.start.dateTime}}
+    - localDate:   {{dates.start.localDate}}
+  
+  МІСЦЕ:
+    - name:        {{_embedded.venues.[0].name}}
+    - city:        {{_embedded.venues.[0].city.name}}
+    - country:     {{_embedded.venues.[0].country.name}}
+    - address:     {{_embedded.venues.[0].address.line1}}
+    - state:       {{_embedded.venues.[0].state.name}}
+  
+  АРТИСТ/ГРУПА:
+    - name:        {{_embedded.attractions.[0].name}}
+  
+  ЦІНИ:
+    - standard:    {{priceRanges.[0].min}} - {{priceRanges.[0].max}} {{priceRanges.[0].currency}}
+    - vip:         {{priceRanges.[1].min}} - {{priceRanges.[1].max}} {{priceRanges.[1].currency}}
+  
+  ПОСИЛАННЯ НА КУПІВЛЮ: {{url}}
+-->

@@ -1,12 +1,3 @@
-import { getEventModalData } from "../api/getEvents.js";
-
-const getModalData = async (eventId) => {
-  try {
-    const modalData = await getEventModalData(eventId);
-    return modalData;
-  } catch (error) {
-    console.error(error.message);
-  }
-};
-
-export { getModalData };
+import Handlebars from "handlebars";
+import modalTemplateSource from "../../template/modal.hbs?raw";
+import { getEventById } from "../api/getEvents.js";

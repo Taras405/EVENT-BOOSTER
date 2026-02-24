@@ -1,131 +1,160 @@
 const BASE_URL = "https://app.ticketmaster.com/discovery/v2";
 const API_KEY = "BIqpeJSCCVibv6jIhfaVoFVpuL0cSADG";
 
-const createQuery = (params) => {
+// TICKETMASTER API - DATA PATHS
+// Документація: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/
+//
+// ПОВНІ ШЛЯХИ ДО ДАНИХ В СТРУКТУРІ API:
+
+// ID:                    event.id
+// НАЗВА:                 event.name
+// ЗОБРАЖЕННЯ:            event.images[0].url (масив зображень)
+// ДАТА/ЧАС:             event.dates.start.dateTime або event.dates.start.localDate
+// МІСЦЕ:                event._embedded.venues[0].name
+// МІСТО:                event._embedded.venues[0].city.name
+// КРАЇНА:               event._embedded.venues[0].country.name
+// АДРЕСА:               event._embedded.venues[0].address.line1
+// АРТИСТ/ГРУПА:         event._embedded.attractions[0].name
+// СТАНДАРТНА ЦІНА:      event.priceRanges[0].min | max | currency
+// VIP ЦІНА:             event.priceRanges[1].min | max | currency
+// ПОСИЛАННЯ НА КУПІВЛЮ: event.url
+
+const request = async (path, params = {}) => {
   const query = new URLSearchParams({ apikey: API_KEY });
 
   Object.entries(params).forEach(([key, value]) => {
-    if (!value && value !== 0) return;
-    query.set(key, String(value));
+    if (value !== undefined && value !== null && value !== "") {
+      query.set(key, String(value));
+    }
   });
 
-  return query.toString();
-};
-
-const request = async (path, params = {}) => {
-  const response = await fetch(`${BASE_URL}${path}?${createQuery(params)}`);
-
-  if (!response.ok) {
-    throw new Error(`Ticketmaster API error: ${response.status}`);
-  }
-
-  return response.json();
-};
-
-const getEventDate = (event) => {
-  if (event?.dates?.start?.dateTime) {
-    return event.dates.start.dateTime;
-  }
-
-  if (event?.dates?.start?.localDate) {
-    return `${event.dates.start.localDate}T00:00:00`;
-  }
-
-  return "";
-};
-
-const formatDate = (dateString) => {
-  if (!dateString) return "No date";
+  const url = `${BASE_URL}${path}?${query.toString()}`;
 
   try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "No date";
+    const response = await fetch(url);
 
-    return new Intl.DateTimeFormat("uk-UA", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).format(date);
-  } catch {
-    return "No date";
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error.message.includes("Failed to fetch")) {
+    } else {
+      console.error("Request error:", error.message);
+    }
+    return null;
   }
 };
 
-const formatDateTime = (dateString) => {
-  if (!dateString) return "No date";
+const toTmDateTime = (d) => d.toISOString().split(".")[0] + "Z";
 
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "No date";
-
-    return new Intl.DateTimeFormat("uk-UA", {
-      year: "numeric",
-      month: "long",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-  } catch {
-    return "No date";
-  }
-};
-
-const getBestCardImage = (images) => {
-  if (!Array.isArray(images)) return "";
-
-  const portrait = images.filter((img) => img.ratio === "3_4");
-
-  if (portrait.length > 0) {
-    return portrait[0].url;
-  }
-
-  return images[0]?.url || "";
-};
-
-const getVenue = (event) => {
-  return event?._embedded?.venues?.[0] || null;
-};
-
-const getAttraction = (event) => {
-  return event?._embedded?.attractions?.[0] || null;
-};
-
-const getPrices = (event) => {
-  return Array.isArray(event?.priceRanges) ? event.priceRanges : [];
+const addYearsUTC = (date, years) => {
+  const d = new Date(date);
+  d.setUTCFullYear(d.getUTCFullYear() + years);
+  return d;
 };
 
 const getEvents = async ({
   page = 1,
   size = 20,
   keyword = "",
-  countryCode = "UA",
+  countryCode = "US",
+  monthsAhead,
+  daysAhead,
 } = {}) => {
-  const requestParams = {
+  const now = new Date();
+
+  let end = addYearsUTC(now, 1);
+  if (Number.isFinite(Number(monthsAhead))) {
+    end = new Date(now);
+    end.setUTCMonth(end.getUTCMonth() + Number(monthsAhead));
+  }
+  if (Number.isFinite(Number(daysAhead))) {
+    end = new Date(now.getTime() + Number(daysAhead) * 24 * 60 * 60 * 1000);
+  }
+
+  const safeSize = Math.min(200, Math.max(1, Number(size) || 20));
+
+  const params = {
     page: Math.max(0, Number(page) - 1),
-    size,
-    sort: "date,asc",
+    size: safeSize,
+    sort: "date,desc",
+    startDateTime: toTmDateTime(now),
+    endDateTime: toTmDateTime(end),
   };
 
-  if (countryCode?.trim()) {
-    requestParams.countryCode = countryCode;
-  }
-
-  if (keyword?.trim()) {
-    requestParams.keyword = keyword;
-  }
+  if (countryCode?.trim())
+    params.countryCode = countryCode.trim().toUpperCase();
+  if (keyword?.trim()) params.keyword = keyword.trim();
 
   try {
-    const payload = await request("/events", requestParams);
-    const events = payload?._embedded?.events || [];
+    const data = await request("/events", params);
 
     return {
-      events,
-      totalEvents: payload?.page?.totalElements || 0,
-      totalPages: payload?.page?.totalPages || 1,
+      events: data?._embedded?.events || [],
+      totalPages: data?.page?.totalPages || 1,
     };
   } catch (error) {
     console.error("Error fetching events:", error);
-    return { events: [], totalEvents: 0, totalPages: 1 };
+    return { events: [], totalPages: 1 };
+  }
+};
+
+const getAllEvents = async ({
+  keyword = "",
+  countryCode = "US",
+  monthsAhead,
+  daysAhead,
+  maxPages = 10,
+} = {}) => {
+  const now = new Date();
+
+  let end = addYearsUTC(now, 1);
+  if (Number.isFinite(Number(monthsAhead))) {
+    end = new Date(now);
+    end.setUTCMonth(end.getUTCMonth() + Number(monthsAhead));
+  }
+  if (Number.isFinite(Number(daysAhead))) {
+    end = new Date(now.getTime() + Number(daysAhead) * 24 * 60 * 60 * 1000);
+  }
+
+  const allEvents = [];
+  let currentPage = 0;
+  let totalPages = 1;
+
+  try {
+    while (currentPage < totalPages && currentPage < maxPages) {
+      const params = {
+        page: currentPage,
+        size: 200,
+        sort: "date,desc",
+        startDateTime: toTmDateTime(now),
+        endDateTime: toTmDateTime(end),
+      };
+
+      if (countryCode?.trim())
+        params.countryCode = countryCode.trim().toUpperCase();
+      if (keyword?.trim()) params.keyword = keyword.trim();
+
+      const data = await request("/events", params);
+
+      if (!data) break;
+
+      const events = data?._embedded?.events || [];
+
+      if (events.length === 0) break;
+
+      allEvents.push(...events);
+
+      totalPages = data?.page?.totalPages || 1;
+      currentPage++;
+    }
+
+    return allEvents;
+  } catch (error) {
+    console.error("Error fetching all events:", error);
+    return allEvents;
   }
 };
 
@@ -134,86 +163,12 @@ const getEventById = async (id) => {
     throw new Error("Event id is required");
   }
 
-  return request(`/events/${id}`);
-};
-
-const mapEventToCardData = (event) => {
-  const venue = getVenue(event);
-  const dateTime = getEventDate(event);
-  const imageUrl = getBestCardImage(event?.images || []);
-
-  return {
-    id: event?.id || "",
-    imageUrl:
-      imageUrl || "https://via.placeholder.com/180x227?text=No+Image",
-    artistName: event?.name || "Untitled event",
-    artistDate: formatDate(dateTime),
-    artistPlace: venue
-      ? `${venue?.city?.name || ""}, ${venue?.country?.name || ""}`
-      : "Venue TBD",
-    locationIcon: "/images/location.svg",
-  };
-};
-
-const mapEventToModalData = (event) => {
-  const venue = getVenue(event);
-  const attraction = getAttraction(event);
-  const prices = getPrices(event);
-  const dateTime = getEventDate(event);
-
-  return {
-    id: event?.id || "",
-    title: event?.name || "",
-    image: getBestCardImage(event?.images || []),
-    dateTime: formatDateTime(dateTime),
-    url: event?.url || "",
-    venue: {
-      city: venue?.city?.name || "",
-      country: venue?.country?.name || "",
-      place: venue?.name || "",
-      address: venue?.address?.line1 || "",
-    },
-    performer: attraction?.name || "",
-    standardPrice: prices[0]
-      ? {
-          min: prices[0].min,
-          max: prices[0].max,
-          currency: prices[0].currency,
-        }
-      : null,
-    vipPrice: prices[1]
-      ? {
-          min: prices[1].min,
-          max: prices[1].max,
-          currency: prices[1].currency,
-        }
-      : null,
-  };
-};
-
-const getEventsForCards = async (params = {}) => {
-  const { events, totalPages } = await getEvents(params);
-
-  return {
-    cards: events.map(mapEventToCardData),
-    totalPages,
-    currentPage: params.page || 1,
-  };
-};
-
-const getEventModalData = async (eventId) => {
   try {
-    const event = await getEventById(eventId);
-    return mapEventToModalData(event);
+    return await request(`/events/${id}`);
   } catch (error) {
-    console.error("Error getting modal data:", error);
-    return null;
+    console.error("Error getting event:", error);
+    throw error;
   }
 };
 
-export {
-  getEventsForCards,
-  getEventModalData,
-  getEvents,
-  getEventById,
-};
+export { getEvents, getAllEvents, getEventById };

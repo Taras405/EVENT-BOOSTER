@@ -1,6 +1,23 @@
 import Handlebars from "handlebars";
 import eventsTemplateSource from "../../template/events.hbs?raw";
-import { getEventsForCards } from "../api/getEvents.js";
+import { getEvents, getAllEvents } from "../api/getEvents.js";
+// import { openModal } from "./modal.js";
+
+Handlebars.registerHelper("formatDate", (dateString) => {
+  if (!dateString) return "No date";
+  try {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    if (year < 1900 || year > 2100) return "No date";
+    return new Intl.DateTimeFormat("uk-UA", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }).format(date);
+  } catch {
+    return dateString;
+  }
+});
 
 const createEventsMarkup = Handlebars.compile(eventsTemplateSource);
 
@@ -12,44 +29,109 @@ const refs = {
 };
 
 let currentPage = 1;
-let totalPages = 1;
 let currentParams = { keyword: "", countryCode: "US" };
+let totalFilteredEvents = 0;
+let allFilteredEvents = [];
 
-const renderCards = (cards) => {
+
+const isDefaultPlaceholder = (url) => {
+  if (!url) return true;
+  const defaultPatterns = [
+    "TABLET_LANDSCAPE",
+    "TABLET_PORTRAIT",
+    "MOBILE_SQUARE",
+    "WEB_LANDSCAPE",
+    "EVENT_DETAIL",
+  ];
+  return defaultPatterns.some((pattern) => url.includes(pattern));
+};
+
+const filterEventsWithImages = (events) => {
+  return events.filter((event) => {
+    const hasImages = event.images && event.images.length > 0;
+    const firstImageUrl = event.images?.[0]?.url;
+    const isDefault = isDefaultPlaceholder(firstImageUrl);
+
+    let validUrl = firstImageUrl && !isDefault ? firstImageUrl : null;
+
+    if (!validUrl && event._embedded?.attractions?.[0]?.images?.[0]?.url) {
+      validUrl = event._embedded.attractions[0].images[0].url;
+    }
+
+    return !!validUrl;
+  });
+};
+
+const renderCards = (events) => {
   if (!refs.container) {
     console.error("Gallery container not found");
     return;
   }
 
-  if (!cards || cards.length === 0) {
+  const filteredEvents = filterEventsWithImages(events);
+
+  if (!filteredEvents || filteredEvents.length === 0) {
     refs.container.innerHTML = "<p class='no-events'>No events found.</p>";
     return;
   }
 
+  allFilteredEvents = filteredEvents;
+  totalFilteredEvents = filteredEvents.length;
+
+  const eventsPerPage = 20;
+  const startIdx = (currentPage - 1) * eventsPerPage;
+  const endIdx = startIdx + eventsPerPage;
+  const pageEvents = filteredEvents.slice(startIdx, endIdx);
+
   try {
-    refs.container.innerHTML = createEventsMarkup(cards);
+    refs.container.innerHTML = createEventsMarkup(pageEvents);
+    attachCardListeners();
   } catch (error) {
     console.error("Error rendering template:", error);
     refs.container.innerHTML = `<p class='error'>Error rendering events</p>`;
   }
 };
 
+const attachCardListeners = () => {
+  const cards = refs.container?.querySelectorAll(".gallery-item");
+
+  if (!cards || cards.length === 0) return;
+
+  cards.forEach((card) => {
+    const eventId = card.dataset.eventId;
+
+    card.addEventListener("click", (e) => {
+      if (eventId) {
+        openModal(eventId);
+      }
+    });
+
+    card.addEventListener("keydown", (e) => {
+      if ((e.key === "Enter" || e.key === " ") && eventId) {
+        openModal(eventId);
+      }
+    });
+  });
+};
+
 const renderPagination = () => {
-  if (!refs.paginationContainer || totalPages <= 1) {
+  if (!refs.paginationContainer) {
     return;
   }
 
-  const maxPagesToShow = 5;
-  const startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-  const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+  const realTotalPages = Math.ceil(totalFilteredEvents / 20);
 
-  let html = "";
-
-
-  if (currentPage > 1) {
-    html += `<button class="pagination-btn" data-page="${currentPage - 1}">← Попередня</button>`;
+  if (realTotalPages <= 1) {
+    refs.paginationContainer.innerHTML = "";
+    return;
   }
 
+  const maxPagesTotal = Math.min(realTotalPages, 50);
+  const maxPagesToShow = 7;
+  const startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+  const endPage = Math.min(maxPagesTotal, startPage + maxPagesToShow - 1);
+
+  let html = "";
 
   if (startPage > 1) {
     html += `<button class="pagination-btn" data-page="1">1</button>`;
@@ -57,7 +139,6 @@ const renderPagination = () => {
       html += `<span class="pagination-dots">...</span>`;
     }
   }
-
 
   for (let i = startPage; i <= endPage; i++) {
     html += `
@@ -70,17 +151,11 @@ const renderPagination = () => {
     `;
   }
 
-
-  if (endPage < totalPages) {
-    if (endPage < totalPages - 1) {
+  if (endPage < maxPagesTotal) {
+    if (endPage < maxPagesTotal - 1) {
       html += `<span class="pagination-dots">...</span>`;
     }
-    html += `<button class="pagination-btn" data-page="${totalPages}">${totalPages}</button>`;
-  }
-
-
-  if (currentPage < totalPages) {
-    html += `<button class="pagination-btn" data-page="${currentPage + 1}">Наступна →</button>`;
+    html += `<button class="pagination-btn" data-page="${maxPagesTotal}">${maxPagesTotal}</button>`;
   }
 
   refs.paginationContainer.innerHTML = html;
@@ -97,10 +172,34 @@ const attachPaginationListeners = () => {
       const page = parseInt(e.target.dataset.page);
       if (page && page !== currentPage) {
         currentPage = page;
-        loadEvents(currentParams);
+  
+        if (allFilteredEvents.length > 0) {
+          showFilteredEventsPage();
+          renderPagination();
+        } else {
+
+          loadEvents(currentParams);
+        }
       }
     });
   });
+};
+
+const showFilteredEventsPage = () => {
+  if (!refs.container || allFilteredEvents.length === 0) return;
+
+  const eventsPerPage = 20;
+  const startIdx = (currentPage - 1) * eventsPerPage;
+  const endIdx = startIdx + eventsPerPage;
+  const pageEvents = allFilteredEvents.slice(startIdx, endIdx);
+
+  try {
+    refs.container.innerHTML = createEventsMarkup(pageEvents);
+    attachCardListeners();
+  } catch (error) {
+    console.error("Error rendering template:", error);
+    refs.container.innerHTML = `<p class='error'>Error rendering events</p>`;
+  }
 };
 
 const loadEvents = async (params = {}) => {
@@ -109,21 +208,19 @@ const loadEvents = async (params = {}) => {
     return;
   }
 
-  refs.container.innerHTML = "<p class='loading'>Завантаження подій...</p>";
+  refs.container.innerHTML = "<p class='loading'>Loading events...</p>";
 
   try {
     currentParams = { ...currentParams, ...params };
+    currentPage = 1;
 
-    const result = await getEventsForCards({
-      page: currentPage,
-      size: 20,
+    const firstPageResult = await getEvents({
+      page: 1,
+      size: 200,
       ...currentParams,
     });
 
-    const { cards, totalPages: newTotalPages } = result;
-    totalPages = newTotalPages;
-
-    renderCards(cards);
+    renderCards(firstPageResult.events);
 
     if (!refs.paginationContainer) {
       const paginationDiv = document.createElement("div");
@@ -133,6 +230,23 @@ const loadEvents = async (params = {}) => {
     }
 
     renderPagination();
+
+    if (firstPageResult.totalPages > 1) {
+      getAllEvents({
+        ...currentParams,
+        maxPages: 6,
+      })
+        .then((allEvents) => {
+
+          allFilteredEvents = filterEventsWithImages(allEvents);
+          totalFilteredEvents = allFilteredEvents.length;
+
+          renderPagination();
+        })
+        .catch((err) => {
+          console.error("Background loading error:", err);
+        });
+    }
   } catch (error) {
     console.error("Error loading events:", error);
     refs.container.innerHTML = `<p class='error'>Помилка: ${error.message}</p>`;
