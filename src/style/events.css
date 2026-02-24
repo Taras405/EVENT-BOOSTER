@@ -1,14 +1,6 @@
 .events {
   margin: 0;
   padding: 40px;
-  font-family: "Inter", Arial, sans-serif;
-  background: radial-gradient(
-    circle at top,
-    #141420 0%,
-    #0b0b12 60%,
-    #07070d 100%
-  );
-  color: #ffffff;
 }
 
 .events__list {
