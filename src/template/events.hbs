@@ -1,0 +1,61 @@
+{#each this}}
+  <li class="gallery-item" data-event-id="{{id}}" tabindex="0">
+    <div class="image-wrapper">
+      {{#if images}}
+        {{#with images.[0]}}
+          <img
+            src="{{url}}"
+            alt="{{../name}}"
+            width="180"
+            height="227"
+          />
+        {{/with}}
+      {{else}}
+        <img
+          src="https://via.placeholder.com/180x227?text=No+Image"
+          alt="{{name}}"
+          width="180"
+          height="227"
+        />
+      {{/if}}
+    </div>
+
+    <p class="artist-name">
+      <i>
+        {{#if _embedded.attractions}}
+          {{#with _embedded.attractions.[0]}}{{name}}{{/with}}
+        {{else}}
+          {{name}}
+        {{/if}}
+      </i>
+    </p>
+
+    <p class="artist-date">
+      {{#if dates.start.dateTime}}
+        {{formatDate dates.start.dateTime}}
+      {{else if dates.start.localDate}}
+        {{formatDate dates.start.localDate}}
+      {{else}}
+        No date
+      {{/if}}
+    </p>
+
+    <p class="artist-place">
+      <img
+        class="location-icon"
+        src="./marker.svg"
+        alt="location icon"
+        width="16"
+        height="16"
+      />
+      {{#if _embedded.venues}}
+        {{#with _embedded.venues.[0]}}
+          {{#if city}}{{city.name}}{{/if}}
+          {{#if country}}, {{country.name}}{{/if}}
+        {{/with}}
+      {{else}}
+        Unknown location
+      {{/if}}
+    </p>
+  </li>
+{{/each}}
