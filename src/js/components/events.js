@@ -23,16 +23,19 @@ const createEventsMarkup = Handlebars.compile(eventsTemplateSource);
 
 const refs = {
   container:
-    document.querySelector(".gallery-list") ||
-    document.querySelector(".gallery-container"),
-  paginationContainer: document.querySelector(".pagination") || null,
+    document.querySelector(
+      ".events__list, .gallery-list, .gallery-container, #gallery-list, .events-grid, .gallery",
+    ) || null,
+  paginationContainer:
+    document.querySelector(".pagination") ||
+    document.querySelector("#pagination") ||
+    null,
 };
 
 let currentPage = 1;
 let currentParams = { keyword: "", countryCode: "US" };
 let totalFilteredEvents = 0;
 let allFilteredEvents = [];
-
 
 const isDefaultPlaceholder = (url) => {
   if (!url) return true;
@@ -93,23 +96,27 @@ const renderCards = (events) => {
 };
 
 const attachCardListeners = () => {
-  const cards = refs.container?.querySelectorAll(".gallery-item");
+  // Support different card class names used by colleagues and template
+  const cards = refs.container?.querySelectorAll(
+    ".gallery-item, .events__item, .card, .event-card, [data-event-id]",
+  );
 
   if (!cards || cards.length === 0) return;
 
   cards.forEach((card) => {
-    const eventId = card.dataset.eventId;
+    const eventId = card.dataset.eventId || card.getAttribute("data-event-id");
 
-    card.addEventListener("click", (e) => {
-      if (eventId) {
-        openModal(eventId);
-      }
+    card.addEventListener("click", () => {
+      if (eventId && typeof openModal === "function") openModal(eventId);
     });
 
     card.addEventListener("keydown", (e) => {
-      if ((e.key === "Enter" || e.key === " ") && eventId) {
+      if (
+        (e.key === "Enter" || e.key === " ") &&
+        eventId &&
+        typeof openModal === "function"
+      )
         openModal(eventId);
-      }
     });
   });
 };
@@ -163,21 +170,24 @@ const renderPagination = () => {
 };
 
 const attachPaginationListeners = () => {
-  const buttons = refs.paginationContainer?.querySelectorAll(".pagination-btn");
+  const buttons = refs.paginationContainer?.querySelectorAll(
+    "[data-page], .pagination-btn, button",
+  );
 
   if (!buttons) return;
 
   buttons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const page = parseInt(e.target.dataset.page);
+      const page = parseInt(
+        e.target.dataset.page || btn.getAttribute("data-page"),
+      );
       if (page && page !== currentPage) {
         currentPage = page;
-  
+
         if (allFilteredEvents.length > 0) {
           showFilteredEventsPage();
           renderPagination();
         } else {
-
           loadEvents(currentParams);
         }
       }
@@ -237,7 +247,6 @@ const loadEvents = async (params = {}) => {
         maxPages: 6,
       })
         .then((allEvents) => {
-
           allFilteredEvents = filterEventsWithImages(allEvents);
           totalFilteredEvents = allFilteredEvents.length;
 
