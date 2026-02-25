@@ -1,75 +1,62 @@
 .events {
-  margin: 0;
   padding: 40px;
 }
 
 .events__list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 40px;
-  list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .events__item {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 22px;
-  padding: 18px;
-  backdrop-filter: blur(10px);
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Hover эффект (логично добавить, раз есть transition) */
-.events__item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  padding: 16px;
+  border-radius: 20px;
+  background-color: #101014;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  text-align: center;
 }
 
 .events__image-wrapper {
+  border-radius: 16px;
   overflow: hidden;
-  border-radius: 18px;
+  margin-bottom: 14px;
 }
 
 .events__image {
+  display: block;
   width: 100%;
   height: auto;
-  display: block;
-  border-radius: 18px;
-  transition: transform 0.4s ease;
-}
-
-.events__item:hover .events__image {
-  transform: scale(1.05);
 }
 
 .events__artist {
+  margin: 0 0 6px;
+  font-size: 16px;
   font-weight: 600;
-  font-size: 18px;
-  margin: 16px 0 6px;
   color: #ff2bd6;
-  text-shadow: 0 0 12px rgba(255, 0, 200, 0.4);
 }
 
 .events__date {
+  margin: 0 0 6px;
   font-size: 14px;
+  color: #ffffff;
   opacity: 0.7;
-  margin-bottom: 6px;
 }
 
 .events__location {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   gap: 6px;
+  margin: 0;
   font-size: 13px;
+  color: #ffffff;
   opacity: 0.6;
 }
 
 .events__icon {
   width: 14px;
   height: 14px;
-  opacity: 0.7;
 }
