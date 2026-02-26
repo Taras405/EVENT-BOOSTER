@@ -22,10 +22,7 @@ Handlebars.registerHelper("formatDate", (dateString) => {
 const createEventsMarkup = Handlebars.compile(eventsTemplateSource);
 
 const refs = {
-  container:
-    document.querySelector(
-      ".events__list, .gallery-list, .gallery-container, #gallery-list, .events-grid, .gallery",
-    ) || null,
+  container: document.querySelector(".events__list") || null,
   paginationContainer:
     document.querySelector(".pagination") ||
     document.querySelector("#pagination") ||
@@ -96,7 +93,6 @@ const renderCards = (events) => {
 };
 
 const attachCardListeners = () => {
-  // Support different card class names used by colleagues and template
   const cards = refs.container?.querySelectorAll(
     ".gallery-item, .events__item, .card, .event-card, [data-event-id]",
   );
