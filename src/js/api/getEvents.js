@@ -1,24 +1,6 @@
 const BASE_URL = "https://app.ticketmaster.com/discovery/v2";
 const API_KEY = "BIqpeJSCCVibv6jIhfaVoFVpuL0cSADG";
 
-// TICKETMASTER API - DATA PATHS
-// Документація: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/
-//
-// ПОВНІ ШЛЯХИ ДО ДАНИХ В СТРУКТУРІ API:
-
-// ID:                    event.id
-// НАЗВА:                 event.name
-// ЗОБРАЖЕННЯ:            event.images[0].url (масив зображень)
-// ДАТА/ЧАС:             event.dates.start.dateTime або event.dates.start.localDate
-// МІСЦЕ:                event._embedded.venues[0].name
-// МІСТО:                event._embedded.venues[0].city.name
-// КРАЇНА:               event._embedded.venues[0].country.name
-// АДРЕСА:               event._embedded.venues[0].address.line1
-// АРТИСТ/ГРУПА:         event._embedded.attractions[0].name
-// СТАНДАРТНА ЦІНА:      event.priceRanges[0].min | max | currency
-// VIP ЦІНА:             event.priceRanges[1].min | max | currency
-// ПОСИЛАННЯ НА КУПІВЛЮ: event.url
-
 const request = async (path, params = {}) => {
   const query = new URLSearchParams({ apikey: API_KEY });
 
@@ -59,7 +41,7 @@ const getEvents = async ({
   page = 1,
   size = 20,
   keyword = "",
-  countryCode = "US",
+  countryCode,
   monthsAhead,
   daysAhead,
 } = {}) => {
@@ -103,7 +85,7 @@ const getEvents = async ({
 
 const getAllEvents = async ({
   keyword = "",
-  countryCode = "US",
+  countryCode,
   monthsAhead,
   daysAhead,
   maxPages = 10,

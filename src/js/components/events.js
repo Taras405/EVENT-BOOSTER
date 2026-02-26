@@ -30,7 +30,8 @@ const refs = {
 };
 
 let currentPage = 1;
-let currentParams = { keyword: "", countryCode: "US" };
+let currentParams = { keyword: "" }; 
+
 let totalFilteredEvents = 0;
 let allFilteredEvents = [];
 
@@ -254,13 +255,19 @@ const loadEvents = async (params = {}) => {
     }
   } catch (error) {
     console.error("Error loading events:", error);
-    refs.container.innerHTML = `<p class='error'>Помилка: ${error.message}</p>`;
+    refs.container.innerHTML = `<p class='error'>Error: ${error.message}</p>`;
   }
 };
 
 const loadEventsByCountry = (countryCode) => {
   currentPage = 1;
-  loadEvents({ countryCode });
+
+  if (countryCode) {
+    loadEvents({ countryCode });
+  } else {
+    currentParams.countryCode = undefined;
+    loadEvents();
+  }
 };
 
 const loadEventsByKeyword = (keyword) => {
@@ -268,6 +275,11 @@ const loadEventsByKeyword = (keyword) => {
   loadEvents({ keyword });
 };
 
+
 loadEvents();
 
-export { loadEvents, loadEventsByCountry, loadEventsByKeyword };
+export {
+  loadEvents,
+  loadEventsByCountry,
+  loadEventsByKeyword,
+};
