@@ -3,16 +3,17 @@
 }
 
 .events__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 60px;
+  row-gap: 50px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
   list-style: none;
 }
 
 .events__item {
+  flex-basis: calc((100% - 3 * 60px) / 4);
   text-align: center;
 }
 
@@ -49,13 +50,15 @@
 }
 
 .events__location {
+  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  column-gap: 3px;
   margin: 0;
+  font-weight: 700;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgb(255, 255, 255);
 }
 
 .events__icon {
