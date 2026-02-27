@@ -23,3 +23,49 @@
   
   ПОСИЛАННЯ НА КУПІВЛЮ: {{url}}
 -->
+
+<ul class="events__list">
+  {{#each this}}
+    <li class="events__item" data-event-id="{{id}}" tabindex="0">
+
+      <div class="modal" id="modal-{{id}}">
+        <div class="modal__content">
+
+          <button class="modal__close">✕</button>
+
+          <div class="modal__wrapper">
+
+            <div class="modal__left">
+              {{#if images}}
+                {{#with images.[0]}}
+                  <img src="{{url}}" alt="{{../name}}" />
+                {{/with}}
+              {{/if}}
+            </div>
+
+            <div class="modal__right">
+              <h2>{{name}}</h2>
+
+              <p><strong>WHEN</strong><br>
+                {{#if dates.start.dateTime}}
+                  {{formatDate dates.start.dateTime}}
+                {{else}}
+                  {{formatDate dates.start.localDate}}
+                {{/if}}
+              </p>
+
+              <p><strong>WHERE</strong><br>
+                {{#with _embedded.venues.[0]}}
+                  {{city.name}}, {{country.name}}
+                {{/with}}
+              </p>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </li>
+  {{/each}}
+</ul>
