@@ -21,10 +21,10 @@
   width: 100%;
   aspect-ratio: 3 / 4;
   overflow: hidden;
-  border-top-left-radius: 0;
-  border-top-right-radius: 40px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 40px;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 40px;
+  border-bottom-left-radius: 0;
 
   margin-bottom: 14px;
 }
