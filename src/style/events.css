@@ -1,34 +1,39 @@
 .events {
-  padding: 40px;
+  padding: 40px 0;
 }
 
 .events__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 40px;
-  margin: 0;
-  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 60px;
+  row-gap: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
   list-style: none;
 }
 
 .events__item {
-  padding: 16px;
-  border-radius: 20px;
-  background-color: #101014;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  flex-basis: calc((100% - 3 * 60px) / 4);
   text-align: center;
 }
 
 .events__image-wrapper {
-  border-radius: 16px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 40px;
+  border-bottom-left-radius: 0;
+
   margin-bottom: 14px;
 }
 
 .events__image {
-  display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .events__artist {
@@ -41,19 +46,19 @@
 .events__date {
   margin: 0 0 6px;
   font-size: 14px;
-  color: #ffffff;
-  opacity: 0.7;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .events__location {
+  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  column-gap: 3px;
   margin: 0;
+  font-weight: 700;
   font-size: 13px;
-  color: #ffffff;
-  opacity: 0.6;
+  color: rgb(255, 255, 255);
 }
 
 .events__icon {
