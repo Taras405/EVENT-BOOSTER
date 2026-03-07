@@ -24,48 +24,46 @@
   ПОСИЛАННЯ НА КУПІВЛЮ: {{url}}
 -->
 
-<ul class="events__list">
-  {{#each this}}
-    <li class="events__item" data-event-id="{{id}}" tabindex="0">
+<div class="modal-overlay">
+  <article class="event-modal" role="dialog" aria-modal="true" aria-label="Event details">
+    <button class="event-modal__close" type="button" aria-label="Close modal">&times;</button>
 
-      <div class="modal" id="modal-{{id}}">
-        <div class="modal__content">
+    <div class="event-modal__author">
+      {{!-- <img src="{{authorImg}}" alt="Author photo"> --}}
+    </div>
 
-          <button class="modal__close">✕</button>
-
-          <div class="modal__wrapper">
-
-            <div class="modal__left">
-              {{#if images}}
-                {{#with images.[0]}}
-                  <img src="{{url}}" alt="{{../name}}" />
-                {{/with}}
-              {{/if}}
-            </div>
-
-            <div class="modal__right">
-              <h2>{{name}}</h2>
-
-              <p><strong>WHEN</strong><br>
-                {{#if dates.start.dateTime}}
-                  {{formatDate dates.start.dateTime}}
-                {{else}}
-                  {{formatDate dates.start.localDate}}
-                {{/if}}
-              </p>
-
-              <p><strong>WHERE</strong><br>
-                {{#with _embedded.venues.[0]}}
-                  {{city.name}}, {{country.name}}
-                {{/with}}
-              </p>
-
-            </div>
-
-          </div>
-        </div>
+    <div class="event-modal__body">
+      <div class="event-modal__poster-wrap">
+        <img class="event-modal__poster" src="{{url}}" alt="{{name}} poster">
       </div>
 
-    </li>
-  {{/each}}
-</ul>
+      <div class="event-modal__content">
+        <p class="event-modal__label">INFO</p>
+        <p class="event-modal__text">{{info}}</p>
+
+        <p class="event-modal__label">WHEN</p>
+        <p class="event-modal__text">{{date}}</p>
+
+        <p class="event-modal__label">WHERE</p>
+        <p class="event-modal__text">{{place}}</p>
+
+        <p class="event-modal__label">WHO</p>
+        <p class="event-modal__text">{{name}}</p>
+
+        <p class="event-modal__label">PRICES</p>
+        <div class="event-modal__prices">
+          {{#each prices}}
+            <div class="event-modal__price-row">
+              <span class="event-modal__price-value">
+                {{#if this.type}}{{this.type}} {{this.min}}-{{this.max}} {{this.currency}}{{else}}{{this}}{{/if}}
+              </span>
+              <button class="event-modal__buy-btn" type="button">BUY TICKETS</button>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+    <button class="event-modal__author-btn" type="button">MORE FROM THIS AUTHOR</button>
+  </article>
+</div>
