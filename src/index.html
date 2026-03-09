@@ -26,19 +26,17 @@
     <title>EVENT BOOSTER</title>
   </head>
   <body>
-
     <div id="app-loader" class="loader-wrapper">
-  <div class="loader">
-    <div class="loader-ring"></div>
-    <div class="loader-text">LOADING...</div>
-  </div>
-</div>
-    
-    {{> header}} {{> events}} {{> footer}}
+      <div class="loader">
+        <div class="loader-ring"></div>
+        <div class="loader-text">LOADING...</div>
+      </div>
+    </div>
 
-    
+    <header>{{> header}}</header>
+    <main>{{> events}}</main>
+    <footer>{{> footer}}</footer>
 
     <script type="module" src="./main.js"></script>
   </body>
-
 </html>

@@ -36,7 +36,6 @@ body {
 .container {
   width: min(100% - 40px, 704px);
   margin-inline: auto;
-  /* outline: 1px solid red; */
 
   @media (min-width: 768px) {
     width: min(100% - 64px, 946px);
