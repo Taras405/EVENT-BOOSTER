@@ -28,6 +28,14 @@
   text-shadow: -1px 0 0 rgba(74, 0, 74, 0.7), 1px 0 0 rgba(74, 0, 74, 0.7),
     0 -1px 0 rgba(74, 0, 74, 0.7), 0 1px 0 rgba(74, 0, 74, 0.7),
     0 0 6px rgba(255, 0, 200, 0.6);
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.events__item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(255, 0, 200, 0.3);
+  cursor: pointer;
 }
 
 .events__item::after {
@@ -106,32 +114,85 @@
   color: #fff;
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 8px;
   margin-top: 40px;
+  animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .pagination-dots {
   display: flex;
   align-items: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+  margin: 0 4px;
 }
 
 .pagination-btn {
   position: relative;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
+  font-weight: 600;
   color: #e5e5e5;
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 0, 200, 0.2);
+  border-radius: 50%;
   cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  overflow: hidden;
+}
+
+.pagination-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 0, 200, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+  z-index: -1;
+}
+
+.pagination-btn:hover {
+  transform: scale(1.1) translateY(-2px);
+  border-color: rgba(255, 0, 200, 0.6);
+  color: #ff00c8;
+  box-shadow: 0 8px 20px rgba(255, 0, 200, 0.3);
+}
+
+.pagination-btn:hover::before {
+  width: 120%;
+  height: 120%;
+}
+
+.pagination-btn:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
 }
 
 .pagination-btn.active {
-  border: 1px solid rgb(220, 86, 197, 100%);
-  border-radius: 20px 0 20px 0;
-  color: rgb(220, 86, 197, 100%);
+  background: linear-gradient(135deg, rgba(255, 0, 200, 0.2), rgba(255, 43, 214, 0.2));
+  border: 2px solid #ff00c8;
+  color: #ff00c8;
+  box-shadow: 0 0 20px rgba(255, 0, 200, 0.5);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 0, 200, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 0, 200, 0.8), 0 0 40px rgba(255, 0, 200, 0.4);
+  }
 }
 
 /* tablet */
