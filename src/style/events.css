@@ -130,8 +130,9 @@
 
 .pagination-btn {
   position: relative;
-  width: 40px;
-  height: 40px;
+  /* make buttons flexible and square-shaped */
+  min-width: 40px;
+  aspect-ratio: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -140,7 +141,8 @@
   color: #e5e5e5;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 0, 200, 0.2);
-  border-radius: 50%;
+  /* only top-left and bottom-right corners rounded */
+  border-radius: 8px 0 8px 0;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
@@ -199,6 +201,12 @@
 @media (max-width: 768px) {
   .events__list {
     column-gap: 40px;
+  }
+
+  /* reduce pagination size on smaller screens */
+  .pagination-btn {
+    min-width: 32px;
+    font-size: 14px;
   }
 
   .events__item {
