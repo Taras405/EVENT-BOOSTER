@@ -29,7 +29,7 @@
     <button class="event-modal__close" type="button" aria-label="Close modal">&times;</button>
 
     <div class="event-modal__author">
-      {{!-- <img src="{{authorImg}}" alt="Author photo"> --}}
+      <img src="{{url}}" alt="Author photo">
     </div>
 
     <div class="event-modal__body">
@@ -57,7 +57,9 @@
               <span class="event-modal__price-value">
                 {{#if this.type}}{{this.type}} {{this.min}}-{{this.max}} {{this.currency}}{{else}}{{this}}{{/if}}
               </span>
-              <button class="event-modal__buy-btn" type="button">BUY TICKETS</button>
+             <a class="event-modal__buy-btn" href="{{this.ticketUrl}}" target="_blank">
+  BUY TICKETS
+</a>
             </div>
           {{/each}}
         </div>
