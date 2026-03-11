@@ -1,7 +1,7 @@
 import Handlebars from "handlebars";
 import eventsTemplateSource from "../../template/events.hbs?raw";
 import { getEvents, getAllEvents } from "../api/getEvents.js";
-// import { openModal } from "./modal.js";
+import { openModal } from "./modal.js";
 
 Handlebars.registerHelper("formatDate", (dateString) => {
   if (!dateString) return "No date";
