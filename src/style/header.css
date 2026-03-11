@@ -1,0 +1,29 @@
+.title {
+  position: absolute;
+  top: 40px;
+  font: Montserrat;
+  font-size: 50px;
+  font-weight: 900;
+  color: #ff2bd6;
+}
+
+.header {
+  padding-top: 40px;
+  padding-bottom: 190px;
+}
+
+.logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.search-input {
+  position: absolute;
+  top: 140px;
+}
+
+.country-select {
+  display: flex;
+  justify-self: end;
+}
