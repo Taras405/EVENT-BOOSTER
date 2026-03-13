@@ -1,12 +1,29 @@
 <header class="header">
-  <div class="container">
-    <a href="" class="logo"><img src="logo.png" alt="logo" /></a>
-    <h1 class="title">FIND BEST EVENTS AROUND THE WORLD</h1>
-    <input type="text" class="search-input" />
-    <label for="country-select">Country</label>
-    <select id="country-select" class="country-select">
-      <option value="">All countries</option>
-    </select>
-    <label for="search-input">Search</label>
+  <a href="#" class="logo" aria-label="Event Booster logo"
+    ><img src="logo.png" alt="Event Booster logo"
+  /></a>
+  <div class="container header__inner">
+    <h1 class="title">
+      FIND BEST EVENTS<br />
+      AROUND THE WORLD
+    </h1>
+
+    <div class="filters">
+      <div class="filter">
+        <label class="visually-hidden" for="search-input"></label>
+        <input
+          id="search-input"
+          type="text"
+          class="search-input"
+          placeholder="Start searching"
+        />
+      </div>
+
+      <div class="filter filter--select">
+        <select id="country-select" class="country-select">
+          <option value="">Choose country</option>
+        </select>
+      </div>
+    </div>
   </div>
 </header>
