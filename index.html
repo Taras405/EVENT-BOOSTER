@@ -23,8 +23,8 @@
     />
 
     <title>EVENT BOOSTER</title>
-    <script type="module" crossorigin src="/EVENT-BOOSTER/assets/index-LDsKhnYW.js"></script>
-    <link rel="stylesheet" crossorigin href="/EVENT-BOOSTER/assets/index-BUy82XzZ.css">
+    <script type="module" crossorigin src="/EVENT-BOOSTER/assets/index-7BClu5lp.js"></script>
+    <link rel="stylesheet" crossorigin href="/EVENT-BOOSTER/assets/index-DBPPj2wy.css">
   </head>
   <body>
     <div id="app-loader" class="loader-wrapper">
@@ -34,19 +34,47 @@
       </div>
     </div>
 
-    <header></header>
+    <header class="header">
+      <a href="#" class="logo" aria-label="Event Booster logo"
+        ><img src="logo.png" alt="Event Booster logo"
+      /></a>
+      <div class="container header__inner">
+        <h1 class="title">
+          FIND BEST EVENTS<br />
+          AROUND THE WORLD
+        </h1>
+    
+        <div class="filters">
+          <div class="filter">
+            <label class="visually-hidden" for="search-input"></label>
+            <input
+              id="search-input"
+              type="text"
+              class="search-input"
+              placeholder="Start searching"
+            />
+          </div>
+    
+          <div class="filter filter--select">
+            <select id="country-select" class="country-select">
+              <option value="">Choose country</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </header>
     <main><section class="events">
   <div class="container">
     <ul class="events__list"></ul>
   </div>
 </section>
+
 </main>
-    <footer><section class="footer">
-  <div class="container">
-    <p class="footer__text">© 2026 | All Rights Reserved | Developed with ♥ by GoIT Students</p>
-  </div>
-</section>
-</footer>
+    <section class="footer">
+      <div class="container">
+        <p class="footer__text">© 2026 | All Rights Reserved | Developed with ♥ by GoIT Students</p>
+      </div>
+    </section>
 
   </body>
 </html>
