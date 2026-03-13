@@ -6,63 +6,6 @@
   animation: slideInLeft 0.6s ease-out forwards;
 }
 
-/* .footer__content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  animation: fadeInUp 0.6s ease-out 0.2s both;
-}
-
-.footer__logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: #ff00c8;
-  text-shadow: 0 0 15px rgba(255, 0, 200, 0.8);
-  animation: fadeInScale 0.8s ease-out 0.3s both;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.footer__logo:hover {
-  transform: scale(1.05);
-  animation: glow 2s ease-in-out infinite;
-}
-
-.footer__links {
-  display: flex;
-  gap: 30px;
-  animation: fadeIn 0.6s ease-out 0.4s both;
-}
-
-.footer__link {
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.footer__link::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(45deg, #ff00c8, #ff2bd6);
-  transition: width 0.3s ease;
-}
-
-.footer__link:hover {
-  color: #ff00c8;
-  transform: translateY(-2px);
-}
-
-.footer__link:hover::after {
-  width: 100%;
-} */
-
 .footer__text {
   font-weight: 400;
   font-size: 16px;
@@ -72,43 +15,3 @@
   color: #939393;
   animation: fadeIn 0.6s ease-out 0.5s both;
 }
-
-/* .footer__social {
-  display: flex;
-  gap: 15px;
-  animation: bounce 0.6s ease-out 0.6s both;
-}
-
-.footer__social-link {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255, 0, 200, 0.3);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ff00c8;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
-}
-
-.footer__social-link:hover {
-  background: rgba(255, 0, 200, 0.1);
-  border-color: #ff00c8;
-  transform: translateY(-3px) scale(1.1);
-  box-shadow: 0 5px 15px rgba(255, 0, 200, 0.3);
-} */
-
-/* Responsive design */
-/* @media (max-width: 768px) {
-  .footer__links {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
-  }
-
-  .footer__social {
-    justify-content: center;
-  }
-} */
