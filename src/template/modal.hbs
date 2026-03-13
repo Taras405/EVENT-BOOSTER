@@ -23,3 +23,49 @@
   
   ПОСИЛАННЯ НА КУПІВЛЮ: {{url}}
 -->
+
+<div class="modal-overlay">
+  <article class="event-modal" role="dialog" aria-modal="true" aria-label="Event details">
+    <button class="event-modal__close" type="button" aria-label="Close modal">&times;</button>
+
+    <div class="event-modal__author">
+      <img src="{{url}}" alt="Author photo">
+    </div>
+
+    <div class="event-modal__body">
+      <div class="event-modal__poster-wrap">
+        <img class="event-modal__poster" src="{{url}}" alt="{{name}} poster">
+      </div>
+
+      <div class="event-modal__content">
+        <p class="event-modal__label">INFO</p>
+        <p class="event-modal__text">{{info}}</p>
+
+        <p class="event-modal__label">WHEN</p>
+        <p class="event-modal__text">{{date}}</p>
+
+        <p class="event-modal__label">WHERE</p>
+        <p class="event-modal__text">{{place}}</p>
+
+        <p class="event-modal__label">WHO</p>
+        <p class="event-modal__text">{{name}}</p>
+
+        <p class="event-modal__label">PRICES</p>
+        <div class="event-modal__prices">
+          {{#each prices}}
+            <div class="event-modal__price-row">
+              <span class="event-modal__price-value">
+                {{#if this.type}}{{this.type}} {{this.min}}-{{this.max}} {{this.currency}}{{else}}{{this}}{{/if}}
+              </span>
+             <a class="event-modal__buy-btn" href="{{this.ticketUrl}}" target="_blank">
+  BUY TICKETS
+</a>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+    <button class="event-modal__author-btn" type="button">MORE FROM THIS AUTHOR</button>
+  </article>
+</div>

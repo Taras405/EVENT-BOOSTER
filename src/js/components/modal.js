@@ -1,6 +1,5 @@
 ﻿import Handlebars from "handlebars";
 import modalTemplateSource from "../../template/modal.hbs?raw";
-import eventTemplateSource from "../../template/events.hbs?raw";
 import { getEventById } from "../api/getEvents.js";
 
 const eventsContainer = document.querySelector(".events");

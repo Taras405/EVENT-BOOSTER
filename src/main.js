@@ -2,9 +2,6 @@
 import "./js/ui/loader.js";
 import "./js/ui/animation.js";
 
-//
-import "./js/components/get_refs.js";
-
 // header
 import "./js/components/country.js"
 import "./js/components/search.js"

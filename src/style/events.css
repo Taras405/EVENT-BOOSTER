@@ -5,26 +5,63 @@
 .events__list {
   display: flex;
   flex-wrap: wrap;
+
   column-gap: 60px;
   row-gap: 50px;
+
   max-width: 1200px;
   margin: 0 auto;
+
   list-style: none;
+  padding: 0;
 }
 
 .events__item {
+  position: relative;
+
   flex-basis: calc((100% - 3 * 60px) / 4);
+
   text-align: center;
+
+  color: #ff3edb;
+
+  text-shadow: -1px 0 0 rgba(74, 0, 74, 0.7), 1px 0 0 rgba(74, 0, 74, 0.7),
+    0 -1px 0 rgba(74, 0, 74, 0.7), 0 1px 0 rgba(74, 0, 74, 0.7),
+    0 0 6px rgba(255, 0, 200, 0.6);
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.events__item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(255, 0, 200, 0.3);
+  cursor: pointer;
+}
+
+.events__item::after {
+  content: "";
+  position: absolute;
+
+  top: -12px;
+  right: -12px;
+
+  width: 153px;
+  height: 143px;
+
+  border: 1px solid rgba(220, 86, 197, 0.3);
+  border-radius: 40px 0 40px 0;
+
+  pointer-events: none;
 }
 
 .events__image-wrapper {
   width: 100%;
   aspect-ratio: 3 / 4;
+
   overflow: hidden;
-  border-top-left-radius: 40px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 40px;
-  border-bottom-left-radius: 0;
+
+  border: 1px solid rgba(220, 86, 197, 0.3);
+  border-radius: 40px 0 40px 0;
 
   margin-bottom: 14px;
 }
@@ -38,30 +75,158 @@
 
 .events__artist {
   margin: 0 0 6px;
+
   font-size: 16px;
   font-weight: 600;
+
   color: #ff2bd6;
 }
 
 .events__date {
   margin: 0 0 6px;
+
   font-size: 14px;
+
   color: rgba(255, 255, 255, 0.7);
 }
 
 .events__location {
-  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
-  column-gap: 3px;
+
+  column-gap: 4px;
+
   margin: 0;
+
   font-weight: 700;
   font-size: 13px;
-  color: rgb(255, 255, 255);
+
+  color: #fff;
 }
 
 .events__icon {
   width: 14px;
   height: 14px;
+}
+
+.pagination {
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 40px;
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.pagination-dots {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+  margin: 0 4px;
+}
+
+.pagination-btn {
+  position: relative;
+  /* make buttons flexible and square-shaped */
+  min-width: 40px;
+  aspect-ratio: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #e5e5e5;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 0, 200, 0.2);
+  /* only top-left and bottom-right corners rounded */
+  border-radius: 8px 0 8px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  overflow: hidden;
+}
+
+.pagination-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 0, 200, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+  z-index: -1;
+}
+
+.pagination-btn:hover {
+  transform: scale(1.1) translateY(-2px);
+  border-color: rgba(255, 0, 200, 0.6);
+  color: #ff00c8;
+  box-shadow: 0 8px 20px rgba(255, 0, 200, 0.3);
+}
+
+.pagination-btn:hover::before {
+  width: 120%;
+  height: 120%;
+}
+
+.pagination-btn:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+}
+
+.pagination-btn.active {
+  background: linear-gradient(135deg, rgba(255, 0, 200, 0.2), rgba(255, 43, 214, 0.2));
+  border: 2px solid #ff00c8;
+  color: #ff00c8;
+  box-shadow: 0 0 20px rgba(255, 0, 200, 0.5);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 0, 200, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 0, 200, 0.8), 0 0 40px rgba(255, 0, 200, 0.4);
+  }
+}
+
+/* tablet */
+@media (max-width: 768px) {
+  .events__list {
+    column-gap: 40px;
+  }
+
+  /* reduce pagination size on smaller screens */
+  .pagination-btn {
+    min-width: 32px;
+    font-size: 14px;
+  }
+
+  .events__item {
+    flex-basis: calc((100% - 2 * 40px) / 3);
+  }
+}
+
+/* mobile */
+@media (max-width: 320px) {
+  .events__list {
+    column-gap: 20px;
+    row-gap: 30px;
+  }
+
+  .events__item {
+    flex-basis: calc((100% - 20px) / 2);
+  }
+
+  .events__item::after {
+    width: 108px;
+    height: 101px;
+  }
 }
