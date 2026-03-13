@@ -11,22 +11,13 @@ const request = async (path, params = {}) => {
   });
 
   const url = `${BASE_URL}${path}?${query.toString()}`;
+  const response = await fetch(url);
 
-  try {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    return response.json();
-  } catch (error) {
-    if (error.message.includes("Failed to fetch")) {
-    } else {
-      console.error("Request error:", error.message);
-    }
-    return null;
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
   }
+
+  return response.json();
 };
 
 const toTmDateTime = (d) => d.toISOString().split(".")[0] + "Z";

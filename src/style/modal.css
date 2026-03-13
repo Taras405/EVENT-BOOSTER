@@ -2,9 +2,11 @@
   position: fixed;
   inset: 0;
   z-index: 2000;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 14px;
   background: rgba(0, 0, 0, 0.65);
 }
@@ -13,22 +15,25 @@
   position: relative;
   width: min(930px, 100%);
   max-height: min(92vh, 1023px);
-  overflow-y: auto;
-  background-color: #fff2fd;
+
+  padding: 201px 70px 30px;
   border-top-left-radius: 300px;
   border-bottom-right-radius: 300px;
-  padding: 201px 70px 30px;
+
+  overflow-y: auto;
+  background-color: #fff2fd;
 }
 
 .event-modal__close {
   position: absolute;
   top: 28px;
   right: 26px;
-  border: 0;
-  background: transparent;
+  
   color: #4c00fe;
+  border: 0;
   font-size: 34px;
   line-height: 1;
+  background: transparent;
   cursor: pointer;
 }
 

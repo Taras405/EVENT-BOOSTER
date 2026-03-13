@@ -6,11 +6,6 @@ const eventsContainer = document.querySelector(".events");
 let backdrop;
 let modalContent;
 
-export function renderEvents(events) {
-  const template = Handlebars.compile(eventTemplateSource);
-  eventsContainer.innerHTML = template(events);
-}
-
 eventsContainer.addEventListener("click", async (event) => {
   const card = event.target.closest(".events__item");
   if (!card) return;
@@ -42,17 +37,6 @@ function createModal() {
 
   backdrop.appendChild(modalContent);
   document.body.appendChild(backdrop);
-
-  Object.assign(backdrop.style, {
-    display: "flex",
-    position: "fixed",
-    top: 0, left: 0,
-    width: "100%", height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "rgba(0,0,0,0.5)",
-    zIndex: 9999
-  });
 }
 
 function openModal() {

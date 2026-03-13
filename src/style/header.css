@@ -1,10 +1,12 @@
 .title {
+  margin: 0 0 52px;
+  text-align: center;
+
+  color: #ff2bd6;
+
   font-size: 50px;
   font-weight: 900;
-  color: #ff2bd6;
-  margin: 0 0 52px;
   line-height: 1.05;
-  text-align: center;
 }
 
 .header {
@@ -34,14 +36,15 @@
   transition: 0.3s ease;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
+
 .filters {
   display: flex;
-  gap: 16px;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   width: 100%;
   max-width: 760px;
+  gap: 16px;
 }
 
 .filter {
@@ -55,13 +58,16 @@
 
 .search-input,
 .country-select {
+  appearance: none;
   width: 100%;
   padding: 12px 16px;
   border-radius: 24px;
   border: none;
+  
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(12px);
   color: rgba(255, 255, 255, 0.65);
+
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s ease;
